@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from 'next-auth/react';
@@ -17,8 +17,12 @@ const ButtonGoogle: React.FC<{ type: string }> = ({ type }) => {
         return null;
     };
 
-    const handleConnect = () => {
-        signIn("google", { callbackUrl: '/dashboard', redirect: false });
+    const handleConnect = async () => {
+        try {
+            await signIn("google", { callbackUrl: '/dashboard', redirect: false });
+        } catch (error) {
+            console.error('Erreur lors de la connexion:', error);
+        }
     };
 
     return (
