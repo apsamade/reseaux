@@ -1,10 +1,6 @@
 import Link from "next/link";
 
-import { getServerAuthSession } from "@/server/auth";
-
 export default async function Home() {
-  const session = await getServerAuthSession();
-
   return (
     <main className="flex items-start justify-start p-3">
       <div className="w-[320px]"></div>

@@ -19,7 +19,7 @@ const ButtonGoogle: React.FC<{ type: string }> = ({ type }) => {
 
     const handleConnect = async () => {
         try {
-            await signIn("google", { callbackUrl: '/dashboard', redirect: false });
+            await signIn("google", { callbackUrl: '/', redirect: false });
         } catch (error) {
             console.error('Erreur lors de la connexion:', error);
         }

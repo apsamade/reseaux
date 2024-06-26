@@ -1,8 +1,9 @@
 import "@/styles/globals.css";
-
 import { GeistSans } from "geist/font/sans";
 import Nav from "@/app/components/Nav";
 import { TRPCReactProvider } from "@/trpc/react";
+import Provider from "./components/Provider";
+import { getServerSession } from "next-auth";
 
 export const metadata = {
   title: "Media Bouderga",
@@ -10,18 +11,21 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
+  const session = await getServerSession();
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en">
       <body>
-        <TRPCReactProvider>
-          <Nav />
-          {children}
+        <Provider session={session}>
+          <TRPCReactProvider>
+            <Nav />
+            {children}
           </TRPCReactProvider>
+        </Provider>
       </body>
     </html>
   );
