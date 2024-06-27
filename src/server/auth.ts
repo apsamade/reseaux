@@ -35,6 +35,7 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   adapter: PrismaAdapter(db) as Adapter,
+  secret: env.NEXTAUTH_SECRET,
 };
 
 export const getServerAuthSession = () => getServerSession(authOptions);
