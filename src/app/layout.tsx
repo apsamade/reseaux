@@ -1,9 +1,9 @@
+// src/app/layout.tsx
 import "@/styles/globals.css";
-import { GeistSans } from "geist/font/sans";
 import Nav from "@/app/components/Nav";
 import { TRPCReactProvider } from "@/trpc/react";
-import Provider from "./components/Provider";
-import { getServerSession } from "next-auth";
+import Provider from "@/app/components/Provider";
+import { ReactNode } from "react";
 
 export const metadata = {
   title: "Media Bouderga",
@@ -11,16 +11,15 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default async function RootLayout({
-  children
-}: {
-  children: React.ReactNode
-}) {
-  const session = await getServerSession();
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <Provider session={session}>
+        <Provider>
           <TRPCReactProvider>
             <Nav />
             {children}
