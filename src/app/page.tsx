@@ -1,6 +1,12 @@
+"use client"
+
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-export default async function Home() {
+export default function Home() {
+  const {data: session, status} =  useSession()
+  console.log(session, status)
+  
   return (
     <main className="flex items-start justify-start p-3">
       <div className="w-[320px]"></div>
