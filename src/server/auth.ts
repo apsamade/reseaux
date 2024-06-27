@@ -19,6 +19,12 @@ declare module "next-auth" {
 }
 
 export const authOptions: NextAuthOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: env.GOOGLE_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
@@ -29,12 +35,6 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   adapter: PrismaAdapter(db) as Adapter,
-  providers: [
-    GoogleProvider({
-      clientId: env.GOOGLE_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
 };
 
 export const getServerAuthSession = () => getServerSession(authOptions);
