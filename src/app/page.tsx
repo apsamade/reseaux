@@ -1,39 +1,46 @@
-"use client"
+'use client'
 
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import ImageUpload from "@/app/components/image-upload"
-import { MdCancel } from "react-icons/md";
 import { useState } from "react";
+import ImageUpload from "@/app/components/image-upload";
+import { MdCancel } from "react-icons/md";
+import type { UploadedFileData } from "@/types/types";
 
 export default function Home() {
-  const { data: session, status } = useSession()
-
-  const [erreur, setErreur] = useState<String>('')
-  const [selectedImage, setSelectedImage] = useState<Object>('')
-
-  const [openAddPicture, setOpenAddPicture] = useState<Boolean>(false)
+  const { data: session } = useSession();
+  const [erreur, setErreur] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState<UploadedFileData | null>(null);
+  const [openAddPicture, setOpenAddPicture] = useState<boolean>(false);
 
   const handleAddPicture = () => {
     if (session?.user) {
-      setOpenAddPicture(!openAddPicture)
+      setOpenAddPicture(!openAddPicture);
     } else {
-      setErreur("Vous devez vous connecter avant d'ajouter une image.")
+      setErreur("Vous devez vous connecter avant d'ajouter une image.");
       setTimeout(() => {
-        setErreur("")
-      }, 5000)
+        setErreur("");
+      }, 5000);
     }
   }
 
-  const onSelectedImage = (image: Object) => {
-    setSelectedImage(image)
-    console.log('Image télécharger : ', image)
+  const onSelectedImage = (image: UploadedFileData | null) => {
+    setSelectedImage(image);
+    console.log('Image téléchargée : ', image);
   }
-  console.log(session, status)
 
   const handleSubmitPicture = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    // ajout du code
+    if (!selectedImage) {
+      setErreur("Veuillez télécharger une image avant de soumettre le formulaire.");
+      setTimeout(() => {
+        setErreur("");
+      }, 5000);
+      return;
+    }
+
+    // Code pour soumettre le formulaire avec l'image téléchargée
+    console.log("Form submitted with image: ", selectedImage);
+    // Ajouter le reste de ton code de soumission ici
   };
 
   return (
@@ -51,14 +58,13 @@ export default function Home() {
         </div>
         <p className="text-center">Aucune image dans la gallery pour le moment ...</p>
 
-        {/* ouverture de la fenetre pour ajouter une photo */}
         {openAddPicture &&
           <div className="absolute flex items-center justify-center -top-4 -left-4 -right-4 -bottom-4 bg-[#000000a1]">
             <form onSubmit={handleSubmitPicture} className="bg-primary m-4 max-w-[1100px] p-4 relative rounded-lg flex items-center justify-center flex-wrap">
               <MdCancel onClick={handleAddPicture} className="absolute top-3 right-3 text-4xl shadow-xl hover:text-red-600 duration-200" />
               <h2 className="grow basis-full text-3xl font-semibold">Add Picture</h2>
               <p className="grow basis-full text-[#fafafa70] mt-2">share your moment with the community</p>
-              <ImageUpload imageUpdatedUrl={onSelectedImage} className="mt-6 w-full basis-full grow" />
+              <ImageUpload onUploadComplete={onSelectedImage} className="mt-6 w-full basis-full grow" />
               <div className="grow basis-full mt-2">
                 <label htmlFor="titre" className="w-full block">Title</label>
                 <input className="p-3 text-black rounded-lg w-full mt-2 mb-5 outline outline-transparent focus:outline-secondary outline-offset-2 outline-2 duration-200" type="text" name="titre" id="titre" placeholder="Choisissez le titre de votre photo" />

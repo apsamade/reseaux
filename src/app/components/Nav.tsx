@@ -9,7 +9,7 @@ import { useState } from "react"
 
 const Nav = () => {
     const { data: session, status } = useSession()
-    const [openMenu, setOpenMenu] = useState<Boolean>(false)
+    const [openMenu, setOpenMenu] = useState<boolean>(false)
     
     const handleNav = () => {
         setOpenMenu(!openMenu)

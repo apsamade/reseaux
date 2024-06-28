@@ -1,8 +1,7 @@
 "use client"
 
-import { FcGoogle } from "react-icons/fc";
 import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 
 const ButtonGoogle: React.FC<{ type: string }> = ({ type }) => {

@@ -1,7 +1,6 @@
 'use client'
 
 import { useSession, signOut } from "next-auth/react"
-import { redirect } from "next/navigation"
 
 const Profile = () => {
     const { data: session, status } = useSession()

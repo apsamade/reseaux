@@ -1,15 +1,14 @@
 'use client'
 
-import { UploadDropzone } from "@/utils/uploadthing"
-import { useState } from "react";
+import { UploadDropzone } from "@/utils/uploadthing";
+import type { UploadedFileData } from "@/types/types";
 
 interface ImageUploadProps {
     className?: string;
-    imageUpdatedUrl?: Object;
+    onUploadComplete: (image: UploadedFileData | null) => void;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ className, imageUpdatedUrl }) => {
-
+const ImageUpload: React.FC<ImageUploadProps> = ({ className, onUploadComplete }) => {
     return (
         <div className={className}>
             <UploadDropzone
@@ -20,7 +19,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ className, imageUpdatedUrl })
                 }}
                 endpoint="imageUploader"
                 onClientUploadComplete={(res) => {
-                    imageUpdatedUrl(res[0]);
+                    if (res && res.length > 0) {
+                        onUploadComplete(res[0] as UploadedFileData);
+                    } else {
+                        onUploadComplete(null);
+                    }
                     console.log("Files: ", res);
                 }}
                 onUploadError={(error: Error) => {
@@ -28,7 +31,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ className, imageUpdatedUrl })
                 }}
             />
         </div>
-    )
+    );
 }
 
 export default ImageUpload;

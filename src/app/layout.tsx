@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import Nav from "@/app/components/Nav";
 import { TRPCReactProvider } from "@/trpc/react";
 import Provider from "@/app/components/Provider";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const metadata = {
   title: "Media Bouderga",
