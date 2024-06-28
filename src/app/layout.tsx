@@ -18,7 +18,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>
+      <body className="overflow-hidden">
         <Provider>
           <TRPCReactProvider>
             <Nav />

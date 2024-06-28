@@ -9,14 +9,16 @@ import { useState } from "react"
 
 const Nav = () => {
     const { data: session, status } = useSession()
-    const [openMenu, setOpenMenu] = useState(false)
+    const [openMenu, setOpenMenu] = useState<Boolean>(false)
+    
     const handleNav = () => {
         setOpenMenu(!openMenu)
     }
 
     return (
         <>
-            <nav className={ openMenu ? "lg:flex flex-wrap hidden items-end justify-center fixed top-0 left-0 bottom-0 m-3 bg-primary w-[300px] rounded-lg p-3" : "flex flex-wrap items-end justify-center fixed top-0 left-0 bottom-0 m-3 bg-primary w-[300px] rounded-lg p-3"}>
+            {/* responsive navbar */}
+            <nav className={!openMenu ? "lg:flex flex-wrap hidden z-50 items-end justify-center fixed top-0 left-0 bottom-0 m-3 bg-primary w-[300px] rounded-lg p-3" : "flex z-50 flex-wrap items-end justify-center fixed top-0 right-0 bottom-0 m-3 bg-primary w-[300px] rounded-lg p-3"}>
                 <div className="w-full mt-12 basis-full">
                     <Link className="p-3 hover:bg-white hover:text-black duration-200 rounded-lg text-center mb-5 bg-secondary basis-full block w-full" href="/">Community</Link>
                     <Link className="py-2 border-b border-transparent duration-200 hover:border-white text-center w-fit mx-auto px-6 block" href="/">My Store</Link>
@@ -26,7 +28,6 @@ const Nav = () => {
                 )}
                 {status === 'authenticated' && session?.user && (
                     <Link
-                        onClick={handleNav}
                         href='/profile'
                         className="flex items-center justify-center"
                     >
@@ -44,9 +45,10 @@ const Nav = () => {
                     <ButtonGoogle type="Sign In" />
                 )}
             </nav>
+            {/* menu burger */}
             <div
                 onClick={handleNav}
-                className='fixed z-50 top-0 hover:px-6 duration-200 right-0 lg:hidden cursor-pointer p-1'
+                className='fixed z-50 top-3 hover:px-6 duration-200 right-3 lg:hidden cursor-pointer p-1'
             >
                 <AiOutlineMenu size={45} className='text-sky-300' />
             </div>
