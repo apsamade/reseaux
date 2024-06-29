@@ -26,20 +26,20 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    signIn({ user, account, profile }) {
       console.log('signIn user : ',user)
       console.log('signIn account : ',account)
       console.log('signIn profile : ',profile)
 
       return true
     },
-    async session({ session, user }) {
+    session({ session, user }) {
       console.log('session session : ', session)
       console.log('session user : ',user)
 
       return session
     },
-    async jwt({ token, account }) {
+    jwt({ token, account }) {
       console.log('token token : ',token)
       console.log('token account : ',account)
 
