@@ -37,7 +37,7 @@ export default function Home() {
       }, 5000);
       return;
     }
-
+    setOpenAddPicture(!openAddPicture);
     // Code pour soumettre le formulaire avec l'image téléchargée
     console.log("Form submitted with image: ", selectedImage);
     // Ajouter le reste de ton code de soumission ici
@@ -67,11 +67,11 @@ export default function Home() {
               <ImageUpload onUploadComplete={onSelectedImage} className="mt-6 w-full basis-full grow" />
               <div className="grow basis-full mt-2">
                 <label htmlFor="titre" className="w-full block">Title</label>
-                <input className="p-3 text-black rounded-lg w-full mt-2 mb-5 outline outline-transparent focus:outline-secondary outline-offset-2 outline-2 duration-200" type="text" name="titre" id="titre" placeholder="Choisissez le titre de votre photo" />
+                <input required className="p-3 text-black rounded-lg w-full mt-2 mb-5 outline outline-transparent focus:outline-secondary outline-offset-2 outline-2 duration-200" type="text" name="titre" id="titre" placeholder="Choisissez le titre de votre photo" />
               </div>
               <div className="grow basis-full my-2">
                 <label htmlFor="description">Description</label>
-                <textarea className="p-3 text-black rounded-lg w-full mt-2 mb-5 outline outline-transparent focus:outline-secondary outline-offset-2 outline-2 h-52 duration-200" name="description" id="description" placeholder="Décrivez votre photo ici ..."></textarea>
+                <textarea required className="p-3 text-black rounded-lg w-full mt-2 mb-5 outline outline-transparent focus:outline-secondary outline-offset-2 outline-2 h-52 duration-200" name="description" id="description" placeholder="Décrivez votre photo ici ..."></textarea>
               </div>
               <button type="submit" className="my-4 p-3 basis-full grow bg-secondary rounded-lg shadow-xl hover:bg-blue-600 duration-200">Ajouter une photo</button>
             </form>
