@@ -1,16 +1,19 @@
-'use client'
+'use client';
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import ImageUpload from "@/app/components/image-upload";
 import { MdCancel } from "react-icons/md";
 import type { UploadedFileData } from "@/types/types";
+import { api } from "@/trpc/react"; // Assurez-vous que ceci est bien configuré
 
 export default function Home() {
   const { data: session } = useSession();
   const [erreur, setErreur] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<UploadedFileData | null>(null);
   const [openAddPicture, setOpenAddPicture] = useState<boolean>(false);
+
+  const createPost = api.post.createPost.useMutation();
 
   const handleAddPicture = () => {
     if (session?.user) {
@@ -21,12 +24,12 @@ export default function Home() {
         setErreur("");
       }, 5000);
     }
-  }
+  };
 
   const onSelectedImage = (image: UploadedFileData | null) => {
     setSelectedImage(image);
     console.log('Image téléchargée : ', image);
-  }
+  };
 
   const handleSubmitPicture = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -37,10 +40,20 @@ export default function Home() {
       }, 5000);
       return;
     }
-    setOpenAddPicture(!openAddPicture);
-    // Code pour soumettre le formulaire avec l'image téléchargée
-    console.log("Form submitted with image: ", selectedImage);
-    // Ajouter le reste de ton code de soumission ici
+
+    try {
+      await createPost.mutateAsync({
+        name: (e.currentTarget.titre as HTMLInputElement).value,
+        image: selectedImage.url, // Assurez-vous que vous avez bien l'URL de l'image
+        description: (e.currentTarget.description as HTMLTextAreaElement).value,
+      });
+      setOpenAddPicture(false);
+    } catch (error) {
+      setErreur("Erreur lors de la création du post.");
+      setTimeout(() => {
+        setErreur("");
+      }, 5000);
+    }
   };
 
   return (
