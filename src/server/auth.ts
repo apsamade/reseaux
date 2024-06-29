@@ -33,26 +33,9 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
-    async session({ session, user }) {
-      // Log session and user for debugging
-      console.log('Session:', session);
-      console.log('User:', user);
-
-      // Ensure user.id is available before using it
-      const userId = user?.id;
-      if (userId) {
-        console.log('User ID:', userId);
-      } else {
-        console.warn('User ID is not available.');
-      }
-
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: userId || session.user.id,
-        },
-      };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    session({ session, token, user }) {
+      return session
     },
 
   },
