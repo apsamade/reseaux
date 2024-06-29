@@ -27,6 +27,12 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token
+      }
+      return token
+    },
     async session({ session, user }) {
       // Log session and user for debugging
       console.log('Session:', session);
@@ -48,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
+
   },
 };
 
