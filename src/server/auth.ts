@@ -27,17 +27,27 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
+    async signIn({ user, account, profile, email }) {
+      console.log(user)
+      console.log(account)
+      console.log(profile)
+      console.log(email)
+
+      return true
+    },
+    session({ session, token, user }) {
+      console.log(session)
+      console.log(token)
+      console.log(user)
+
+      return session
+    },
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token
       }
       return token
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    session({ session, token, user }) {
-      return session
-    },
-
   },
 };
 
