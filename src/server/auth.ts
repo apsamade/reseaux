@@ -31,6 +31,7 @@ export const authOptions: NextAuthOptions = {
       console.log('signIn user : ',user)
       console.log('signIn account : ',account)
       console.log('signIn profile : ',profile)
+      
       return true
     },
     async session({ session, user }) {
