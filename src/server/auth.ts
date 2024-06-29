@@ -28,17 +28,17 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
     async signIn({ user, account, profile, email }) {
-      console.log(user)
-      console.log(account)
-      console.log(profile)
-      console.log(email)
+      console.log('signIn user : ',user)
+      console.log('signIn account : ',account)
+      console.log('signIn profile : ',profile)
+      console.log('signIn email : ',email)
 
       return true
     },
     session({ session, token, user }) {
-      console.log(session)
-      console.log(token)
-      console.log(user)
+      console.log('session session : ', session)
+      console.log('session token : ',token)
+      console.log('session user : ',user)
 
       return session
     },
