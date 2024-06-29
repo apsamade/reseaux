@@ -27,13 +27,27 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async session({ session, user }) {
+      // Log session and user for debugging
+      console.log('Session:', session);
+      console.log('User:', user);
+
+      // Ensure user.id is available before using it
+      const userId = user?.id;
+      if (userId) {
+        console.log('User ID:', userId);
+      } else {
+        console.warn('User ID is not available.');
+      }
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: userId || session.user.id,
+        },
+      };
+    },
   },
 };
 
