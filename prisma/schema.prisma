@@ -9,7 +9,7 @@ datasource db {
 
 model Post {
     id          Int      @id @default(autoincrement())
-    titre       String
+    name        String
     image       String
     description String
     createdAt DateTime @default(now())
@@ -18,7 +18,7 @@ model Post {
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
 
-    @@index([titre])
+    @@index([name])
 }
 
 // Necessary for Next auth
