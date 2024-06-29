@@ -33,14 +33,16 @@ export const authOptions: NextAuthOptions = {
       console.log('signIn profile : ',profile)
       return true
     },
-    async session({ session, token, user }) {
+    async session({ session, user }) {
       console.log('session session : ', session)
-      console.log('session token : ',token)
       console.log('session user : ',user)
 
       return session
     },
     async jwt({ token, account }) {
+      console.log('token token : ',token)
+      console.log('token account : ',account)
+
       if (account) {
         token.accessToken = account.access_token
       }
