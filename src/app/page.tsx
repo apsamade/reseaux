@@ -97,13 +97,13 @@ export default function Home() {
                     <div className="absolute overflow-hidden opacity-0 hover:opacity-100 duration-200 z-10 top-0 left-0 right-0 bottom-0 flex justify-between flex-col">
                       <h3 className="p-2 flex items-center justify-start pb-8 bg-gradient-to-b from-[#000000a8] to-transparent">
                         <Image
-                          src={ post.User?.image || "/icons/profile.png" }
-                          alt={post.User?.name || "utilisateur introuvable"}
+                          src={ post.User?.image ?? "/icons/profile.png" }
+                          alt={ post.User?.name ?? "utilisateur introuvable" }
                           width={35}
                           height={35}
                           className="rounded-full mr-2"
                         />
-                        {post.User?.name || 'Utilisateur inconnu'}
+                        {post.User?.name ?? 'Utilisateur inconnu'}
                       </h3>
                       <div className="p-2 pt-8 bg-gradient-to-t from-[#000000a8] to-transparent">
                         <h2 className="text-xl font-semibold mb-2">{post.name}</h2>

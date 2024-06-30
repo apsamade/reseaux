@@ -27,6 +27,7 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     signIn({ user, account, profile }) {
 
       return true
