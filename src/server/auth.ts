@@ -10,16 +10,15 @@ import GoogleProvider from "next-auth/providers/google";
 import { env } from "@/env";
 import { db } from "@/server/db";
 
-// Étendre le type DefaultSession pour inclure un ID utilisateur optionnel
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id?: string; // Utilisation d'un type optionnel pour `id`
+      id?: string; // Optionnel pour éviter des erreurs
     } & DefaultSession["user"];
   }
 
   interface JWT {
-    id?: string; // Assurez-vous que `id` est bien optionnel ici aussi
+    id?: string; // Optionnel pour éviter des erreurs
   }
 }
 
@@ -39,7 +38,6 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       console.log("Session callback", { session, token });
 
-      // Vérifiez que session.user est défini et que token.id est une chaîne avant d'assigner
       if (session.user && typeof token.id === 'string') {
         session.user.id = token.id;
       }
@@ -49,12 +47,13 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, user }) {
       console.log("JWT callback", { token, account, user });
 
-      // Assurez-vous que `user.id` est une chaîne avant de l'assigner à `token.id`
+      // Lors de la connexion, stocker les informations utilisateur dans le token
       if (user?.id) {
         token.id = user.id;
       }
-      
-      if (account) {
+
+      // Stocker accessToken dans le token
+      if (account?.access_token) {
         token.accessToken = account.access_token;
       }
 
