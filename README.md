@@ -35,3 +35,11 @@ dans le terminal faire :
     - npm i
     - npm run dev
     - oubliez pas les variables d'env
+
+Il manque l'intégration de tanStackQuery + la fonctionnalité de like
+léger bug de session Elle ne s'ouvre pas en production (j'aimerais bien avoir un débug)
+le reste est fonctionnelle, j'ai appris les stacks en 3 jours : typeScript / T3 App / TRPC / UploadThings / Neon Database / Prisma
+
+j'espère pouvoir en discuter avec vous lors d'un entretien
+
+le projet est déployé : https://reseaux.vercel.app/
