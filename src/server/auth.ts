@@ -27,14 +27,14 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
-    async signIn({ user, account, profile }) {
-      console.log("SignIn callback", { user, account, profile });
+    async signIn({ user }) {
+      console.log("SignIn callback", { user });
       return true;
     },
-    async session({ session, user }) {
-      console.log("Session callback", { session, user });
+    async session({ session, token }) {
+      console.log("Session callback", { session, token });
       if (session.user) {
-        session.user.id = user.id;
+        session.user.id = token.id as string; // Assurez-vous que 'id' est bien défini
       }
       return session;
     },
@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt",  // Utilisez 'jwt' ou laissez par défaut pour les cookies
+    strategy: "jwt", // Utilisez 'jwt' ou laissez par défaut pour les cookies
   },
   pages: {
     signIn: "/auth/signin",
