@@ -50,9 +50,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: env.NEXTAUTH_SECRET,
-  // session: {
-  //   strategy: "jwt",
-  // },
+  session: {
+    strategy: "jwt",  // Utilisez 'jwt' ou laissez par défaut pour les cookies
+  },
   pages: {
     signIn: "/auth/signin",
   },
