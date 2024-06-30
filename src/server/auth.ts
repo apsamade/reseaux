@@ -27,31 +27,37 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    signIn({ user, account, profile }) {
-
-      return true
+    async signIn({ user, account, profile }) {
+      console.log("SignIn callback", { user, account, profile });
+      return true;
     },
-    session({ session, user }) {
-      console.log('session session : ', session)
-      console.log('session user : ',user)
-
+    async session({ session, user }) {
+      console.log("Session callback", { session, user });
       if (session.user) {
         session.user.id = user.id;
       }
-
-      return session
+      return session;
     },
-    jwt({ token, account }) {
-      console.log('token token : ',token)
-      console.log('token account : ',account)
-
+    async jwt({ token, account, user }) {
+      console.log("JWT callback", { token, account, user });
       if (account) {
-        token.accessToken = account.access_token
+        token.accessToken = account.access_token;
       }
-      return token
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
     },
+  },
+  secret: env.NEXTAUTH_SECRET,
+  // session: {
+  //   strategy: "jwt",
+  // },
+  pages: {
+    signIn: "/auth/signin",
   },
 };
 
-export const getServerAuthSession = () => getServerSession(authOptions);
+export const getServerAuthSession = async () => {
+  return await getServerSession(authOptions);
+};
