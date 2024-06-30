@@ -36,4 +36,23 @@ export const postRouter = createTRPCRouter({
             },
         });
     }),
+
+    // Route publique pour récupérer les posts d'un user
+    getUserPosts: publicProcedure
+    .input(
+        z.object({
+            userId: z.string(),
+        })
+    )
+    .query(async ({ input }) => {
+        return await db.post.findMany({
+            where: {
+                createdById: input.userId,
+            },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                User: true, // Inclut les informations de l'utilisateur
+            },
+        });
+    }),
 });

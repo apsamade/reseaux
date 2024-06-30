@@ -32,3 +32,10 @@ body{
     background-color: #212121;
     color: white;
 }
+
+.gridy {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
+}

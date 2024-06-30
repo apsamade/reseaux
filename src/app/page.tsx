@@ -6,7 +6,7 @@ import Image from "next/image";
 import ImageUpload from "@/app/components/image-upload";
 import { MdCancel } from "react-icons/md";
 import type { UploadedFileData } from "@/types/types";
-import { api } from "@/trpc/react"; // Assurez-vous que ceci est bien configuré
+import { api } from "@/trpc/react";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -82,13 +82,13 @@ export default function Home() {
         ) : isError ? (
           <p className="text-center">Erreur lors du chargement des posts.</p>
         ) : (
-          <div>
+          <>
             {posts && posts.length === 0 ? (
               <p className="text-center">Aucune image dans la galerie pour le moment ...</p>
             ) : (
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="gridy w-full">
                 {posts?.map((post) => (
-                  <div key={post.id} className="w-[300px] h-[300px] z-0 overflow-hidden relative rounded-lg shadow-md">
+                  <div key={post.id} className="w-[300px] mx-auto h-[300px] z-0 overflow-hidden relative rounded-lg shadow-xl">
                     <Image
                       src={post.image}
                       alt={post.name}
@@ -116,7 +116,7 @@ export default function Home() {
                 ))}
               </div>
             )}
-          </div>
+          </>
         )}
         {openAddPicture &&
           <div className="absolute flex items-center justify-center -top-4 -left-4 -right-4 -bottom-4 bg-[#000000a1]">
