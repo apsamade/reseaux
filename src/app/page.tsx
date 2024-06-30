@@ -1,69 +1,76 @@
 'use client';
 
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { MdCancel } from "react-icons/md";
-
-import Image from "next/image";
-import ImageUpload from "@/app/components/image-upload";
-import type { UploadedFileData } from "@/types/types";
-
-import { api } from "@/trpc/react";
-
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSession } from "next-auth/react"; // Hook pour gérer l'authentification et obtenir les données de session
+import { useState } from "react"; // Hook pour gérer les états locaux
+import { MdCancel } from "react-icons/md"; // Icône pour annuler la création d'une photo
+import Image from "next/image"; // Composant pour gérer les images
+import ImageUpload from "@/app/components/image-upload"; // Composant pour télécharger une image
+import type { UploadedFileData } from "@/types/types"; // Type pour les données d'image téléchargée
+import { api } from "@/trpc/react"; // API TRPC pour les appels serveur
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'; // Hooks de React Query pour les requêtes et mutations
 
 export default function Home() {
+  // Récupère les données de session utilisateur
   const { data: session, status } = useSession();
+  
+  // Récupère les posts depuis l'API
   const { data: posts, isLoading, isError } = api.post.getPosts.useQuery();
 
+  // États pour gérer les erreurs, l'image sélectionnée, et l'état du formulaire d'ajout
   const [erreur, setErreur] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<UploadedFileData | null>(null);
   const [openAddPicture, setOpenAddPicture] = useState<boolean>(false);
 
-
+  // Mutation pour créer un post
   const createPost = api.post.createPost.useMutation();
 
-  console.log('GET POSTS : ', posts, isLoading, isError)
-  console.log('GET SESSION : ', session, status)
+  // Affiche les données de posts et session pour débogage
+  console.log('GET POSTS : ', posts, isLoading, isError);
+  console.log('GET SESSION : ', session, status);
 
-
+  // Fonction pour ouvrir/fermer le formulaire d'ajout d'image
   const handleAddPicture = () => {
     if (session?.user) {
-      setOpenAddPicture(!openAddPicture);
+      setOpenAddPicture(!openAddPicture); // Bascule l'état d'ouverture du formulaire
     } else {
       setErreur("Vous devez vous connecter avant d'ajouter une image.");
       setTimeout(() => {
-        setErreur("");
+        setErreur(""); // Efface le message d'erreur après 5 secondes
       }, 5000);
     }
   };
 
+  // Fonction appelée lorsque l'image est sélectionnée
   const onSelectedImage = (image: UploadedFileData | null) => {
     setSelectedImage(image);
-    console.log('Image téléchargée : ', image);
+    console.log('Image téléchargée : ', image); // Affiche les détails de l'image téléchargée
   };
 
+  // Fonction pour soumettre le formulaire d'ajout de photo
   const handleSubmitPicture = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+    e.preventDefault(); // Empêche le rechargement de la page lors de la soumission
+
+    // Vérifie si une image a été sélectionnée
     if (!selectedImage) {
       setErreur("Veuillez télécharger une image avant de soumettre le formulaire.");
       setTimeout(() => {
-        setErreur("");
+        setErreur(""); // Efface le message d'erreur après 5 secondes
       }, 5000);
       return;
     }
 
     try {
+      // Envoie la mutation pour créer un nouveau post
       await createPost.mutateAsync({
         name: (e.currentTarget.titre as HTMLInputElement).value,
-        image: selectedImage.url, // Assurez-vous que vous avez bien l'URL de l'image
+        image: selectedImage.url, // URL de l'image téléchargée
         description: (e.currentTarget.description as HTMLTextAreaElement).value,
       });
-      setOpenAddPicture(false);
+      setOpenAddPicture(false); // Ferme le formulaire après une soumission réussie
     } catch (error) {
       setErreur("Erreur lors de la création du post.");
       setTimeout(() => {
-        setErreur("");
+        setErreur(""); // Efface le message d'erreur après 5 secondes
       }, 5000);
     }
   };
@@ -83,13 +90,13 @@ export default function Home() {
         </div>
 
         {isLoading ? (
-          <p className="text-center">Chargement des posts...</p>
+          <p className="text-center">Chargement des posts...</p> // Affiche un message pendant le chargement des posts
         ) : isError ? (
-          <p className="text-center">Erreur lors du chargement des posts.</p>
+          <p className="text-center">Erreur lors du chargement des posts.</p> // Affiche un message en cas d'erreur lors du chargement
         ) : (
           <>
             {posts && posts.length === 0 ? (
-              <p className="text-center">Aucune image dans la galerie pour le moment ...</p>
+              <p className="text-center">Aucune image dans la galerie pour le moment ...</p> // Affiche un message si aucun post n'est trouvé
             ) : (
               <div className="gridy w-full">
                 {posts?.map((post) => (
