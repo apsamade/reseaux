@@ -1,9 +1,10 @@
-// src/app/layout.tsx
 import "@/styles/globals.css";
 import Nav from "@/app/components/Nav";
 import { TRPCReactProvider } from "@/trpc/react";
 import Provider from "@/app/components/Provider";
 import type { ReactNode } from "react";
+
+import ReactQueryProvider from "./components/ReactQueryProvider";
 
 export const metadata = {
   title: "Media Bouderga",
@@ -20,10 +21,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className="overflow-x-hidden">
         <Provider>
-          <TRPCReactProvider>
-            <Nav />
-            {children}
-          </TRPCReactProvider>
+          <ReactQueryProvider>
+            <TRPCReactProvider>
+              <Nav />
+              {children}
+            </TRPCReactProvider>
+          </ReactQueryProvider>
         </Provider>
       </body>
     </html>

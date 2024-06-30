@@ -2,11 +2,15 @@
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { MdCancel } from "react-icons/md";
+
 import Image from "next/image";
 import ImageUpload from "@/app/components/image-upload";
-import { MdCancel } from "react-icons/md";
 import type { UploadedFileData } from "@/types/types";
+
 import { api } from "@/trpc/react";
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -15,6 +19,7 @@ export default function Home() {
   const [erreur, setErreur] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<UploadedFileData | null>(null);
   const [openAddPicture, setOpenAddPicture] = useState<boolean>(false);
+
 
   const createPost = api.post.createPost.useMutation();
 
