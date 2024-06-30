@@ -9,7 +9,7 @@ import type { UploadedFileData } from "@/types/types";
 import { api } from "@/trpc/react"; // Assurez-vous que ceci est bien configuré
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { data: posts, isLoading, isError } = api.post.getPosts.useQuery();
 
   const [erreur, setErreur] = useState<string>('');
@@ -19,6 +19,8 @@ export default function Home() {
   const createPost = api.post.createPost.useMutation();
 
   console.log('GET POSTS : ', posts, isLoading, isError)
+  console.log('GET SESSION : ', session, status)
+
 
   const handleAddPicture = () => {
     if (session?.user) {
