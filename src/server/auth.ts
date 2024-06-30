@@ -10,11 +10,16 @@ import GoogleProvider from "next-auth/providers/google";
 import { env } from "@/env";
 import { db } from "@/server/db";
 
+// Étendre le type DefaultSession pour inclure un ID utilisateur optionnel
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string;
+      id?: string; // Utilisation d'un type optionnel pour `id`
     } & DefaultSession["user"];
+  }
+
+  interface JWT {
+    id?: string; // Assurez-vous que `id` est bien optionnel ici aussi
   }
 }
 
@@ -33,25 +38,32 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       console.log("Session callback", { session, token });
-      if (session.user) {
-        session.user.id = token.id as string; // Assurez-vous que 'id' est bien défini
+
+      // Vérifiez que session.user est défini et que token.id est une chaîne avant d'assigner
+      if (session.user && typeof token.id === 'string') {
+        session.user.id = token.id;
       }
+
       return session;
     },
     async jwt({ token, account, user }) {
       console.log("JWT callback", { token, account, user });
+
+      // Assurez-vous que `user.id` est une chaîne avant de l'assigner à `token.id`
+      if (user?.id) {
+        token.id = user.id;
+      }
+      
       if (account) {
         token.accessToken = account.access_token;
       }
-      if (user) {
-        token.id = user.id;
-      }
+
       return token;
     },
   },
-  secret: env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET, // Assurez-vous que NEXTAUTH_SECRET est bien défini dans les variables d'environnement
   session: {
-    strategy: "jwt", // Utilisez 'jwt' ou laissez par défaut pour les cookies
+    strategy: "jwt",
   },
   pages: {
     signIn: "/auth/signin",
