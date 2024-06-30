@@ -25,11 +25,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  adapter: PrismaAdapter(db) as Adapter,
   callbacks: {
     signIn({ user, account, profile }) {
-      console.log('signIn user : ',user)
-      console.log('signIn account : ',account)
-      console.log('signIn profile : ',profile)
 
       return true
     },
@@ -53,7 +51,6 @@ export const authOptions: NextAuthOptions = {
       return token
     },
   },
-  adapter: PrismaAdapter(db) as Adapter,
 };
 
 export const getServerAuthSession = () => getServerSession(authOptions);

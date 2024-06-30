@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import Image from "next/image";
 import ImageUpload from "@/app/components/image-upload";
 import { MdCancel } from "react-icons/md";
 import type { UploadedFileData } from "@/types/types";
@@ -9,11 +10,15 @@ import { api } from "@/trpc/react"; // Assurez-vous que ceci est bien configuré
 
 export default function Home() {
   const { data: session } = useSession();
+  const { data: posts, isLoading, isError } = api.post.getPosts.useQuery();
+
   const [erreur, setErreur] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<UploadedFileData | null>(null);
   const [openAddPicture, setOpenAddPicture] = useState<boolean>(false);
 
   const createPost = api.post.createPost.useMutation();
+
+  console.log('GET POSTS : ', posts, isLoading, isError)
 
   const handleAddPicture = () => {
     if (session?.user) {
@@ -69,8 +74,48 @@ export default function Home() {
             <button onClick={handleAddPicture} className="bg-secondary w-full lg:w-fit lg:mx-0 mx-auto rounded-lg hover:px-6 duration-200 p-3">Add Picture</button>
           </div>
         </div>
-        <p className="text-center">Aucune image dans la gallery pour le moment ...</p>
 
+        {isLoading ? (
+          <p className="text-center">Chargement des posts...</p>
+        ) : isError ? (
+          <p className="text-center">Erreur lors du chargement des posts.</p>
+        ) : (
+          <div>
+            {posts && posts.length === 0 ? (
+              <p className="text-center">Aucune image dans la galerie pour le moment ...</p>
+            ) : (
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                {posts?.map((post) => (
+                  <div key={post.id} className="w-[300px] h-[300px] z-0 overflow-hidden relative rounded-lg shadow-md">
+                    <Image
+                      src={post.image}
+                      alt={post.name}
+                      width={500}
+                      height={500}
+                      className="absolute w-full h-full -z-10 top-0 left-0 right-0 bottom-0 rounded-lg mb-2 object-cover"
+                    />
+                    <div className="absolute overflow-hidden opacity-0 hover:opacity-100 duration-200 z-10 top-0 left-0 right-0 bottom-0 flex justify-between flex-col">
+                      <h3 className="p-2 flex items-center justify-start pb-8 bg-gradient-to-b from-[#000000a8] to-transparent">
+                        <Image
+                          src={ post.User?.image || "/icons/profile.png" }
+                          alt={post.User?.name || "utilisateur introuvable"}
+                          width={35}
+                          height={35}
+                          className="rounded-full mr-2"
+                        />
+                        {post.User?.name || 'Utilisateur inconnu'}
+                      </h3>
+                      <div className="p-2 pt-8 bg-gradient-to-t from-[#000000a8] to-transparent">
+                        <h2 className="text-xl font-semibold mb-2">{post.name}</h2>
+                        <p className="truncate w-full inline-block">{post.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         {openAddPicture &&
           <div className="absolute flex items-center justify-center -top-4 -left-4 -right-4 -bottom-4 bg-[#000000a1]">
             <form onSubmit={handleSubmitPicture} className="bg-primary m-4 max-w-[1100px] p-4 relative rounded-lg flex items-center justify-center flex-wrap">

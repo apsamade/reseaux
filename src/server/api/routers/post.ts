@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { db } from "@/server/db"; // Assure-toi que le client Prisma est bien importé
+import { db } from "@/server/db";
 
 export const postRouter = createTRPCRouter({
     createPost: protectedProcedure
@@ -12,11 +12,8 @@ export const postRouter = createTRPCRouter({
             })
         )
         .mutation(async ({ input, ctx }) => {
-            console.log('le ctx ressemble a ca : ', ctx.session)
-            console.log('le input ressemble a ca : ', input)
-
             if (!ctx.session?.user?.id) {
-                throw new Error("User not authenticated or user ID is undefined.");
+                throw new Error("User non connecter.");
             }
 
             const post = await db.post.create({
@@ -25,6 +22,18 @@ export const postRouter = createTRPCRouter({
                     createdById: ctx.session?.user?.id,
                 },
             });
+
+            console.log('post créer avec succès !', post)
             return post;
         }),
+
+    // Route pour récupérer les posts
+    getPosts: protectedProcedure.query(async () => {
+        return await db.post.findMany({
+            orderBy: { createdAt: 'desc' },
+            include: {
+                User: true, // Inclut les informations de l'utilisateur
+            },
+        });
+    }),
 });
