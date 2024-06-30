@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { db } from "@/server/db";
 
 export const postRouter = createTRPCRouter({
@@ -13,7 +13,7 @@ export const postRouter = createTRPCRouter({
         )
         .mutation(async ({ input, ctx }) => {
             if (!ctx.session?.user?.id) {
-                throw new Error("User non connecter.");
+                throw new Error("User non connecté.");
             }
 
             const post = await db.post.create({
@@ -23,12 +23,12 @@ export const postRouter = createTRPCRouter({
                 },
             });
 
-            console.log('post créer avec succès !', post)
+            console.log('post créé avec succès !', post)
             return post;
         }),
 
-    // Route pour récupérer les posts
-    getPosts: protectedProcedure.query(async () => {
+    // Route publique pour récupérer les posts
+    getPosts: publicProcedure.query(async () => {
         return await db.post.findMany({
             orderBy: { createdAt: 'desc' },
             include: {
